@@ -95,17 +95,12 @@ export default function FormPage() {
   }
 
   const handleSubmit = async () => {
-    // 不强制要求必填，用户可部分填写，后续网页可补全
     setLoading(true)
     try {
-      const userInfo = Taro.getStorageSync('userInfo')
       const response = await Network.request({
         url: '/api/software-copyright/form',
         method: 'POST',
-        data: {
-          ...formData,
-          user_id: userInfo?.id || 'test_user_id',
-        },
+        data: formData,
       })
 
       if (response.data?.code === 200) {
