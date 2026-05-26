@@ -207,7 +207,7 @@ export default function Index() {
                   onClick={handleWechatLogin}
                   disabled={loading}
                 >
-                  {loading ? '登录中...' : '微信登录'}
+                  {loading ? '登录中...' : (Taro.getEnv() === Taro.ENV_TYPE.WEAPP || Taro.getEnv() === Taro.ENV_TYPE.TT ? '微信登录' : '立即登录')}
                 </Button>
               </View>
             </CardContent>
