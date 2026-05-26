@@ -187,7 +187,7 @@ export default defineConfig<'vite'>(async (merge, _env) => {
         open: false,
         proxy: {
           '/api': {
-            target: process.env.SOFTREG_API_URL || 'http://localhost:8000',
+            target: 'https://web-production-2c115.up.railway.app',
             changeOrigin: true,
           },
         },
