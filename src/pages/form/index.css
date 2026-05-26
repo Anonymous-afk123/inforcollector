@@ -1,0 +1,96 @@
+.form-page {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 12px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+}
+
+.form-container {
+  height: calc(100vh - 56px);
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.form-card {
+  margin-bottom: 16px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.form-content {
+  padding: 16px;
+}
+
+.form-item {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.input-wrapper {
+  background-color: #f8f8f8;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.form-input {
+  width: 100%;
+  font-size: 14px;
+  color: #333;
+}
+
+.textarea-wrapper {
+  background-color: #f8f8f8;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.char-count {
+  display: block;
+  text-align: right;
+  font-size: 12px;
+  color: #999;
+  margin-top: 4px;
+}
+
+.radio-group {
+  display: flex;
+  gap: 12px;
+}
+
+.radio-btn {
+  flex: 1;
+}
+
+.submit-section {
+  padding: 20px 0 40px;
+}
+
+.submit-btn {
+  font-size: 16px;
+  font-weight: 500;
+}

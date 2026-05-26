@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>软著采集表查询</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+      width: 100%;
+    }
+    
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
+    
+    .input-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+      font-weight: 500;
+    }
+    
+    input {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    
+    button {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    .result {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      display: none;
+    }
+    
+    .result.show {
+      display: block;
+    }
+    
+    .result h2 {
+      color: #333;
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+    
+    .result-item {
+      margin-bottom: 10px;
+      padding: 10px;
+      background: white;
+      border-radius: 5px;
+      border-left: 3px solid #667eea;
+    }
+    
+    .result-item strong {
+      display: block;
+      color: #667eea;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+    
+    .result-item span {
+      color: #333;
+      font-size: 15px;
+    }
+    
+    .error {
+      background: #fee;
+      border-left-color: #f44;
+      color: #c00;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #667eea;
+      font-weight: 500;
+    }
+    
+    .tip {
+      margin-top: 15px;
+      padding: 15px;
+      background: #e3f2fd;
+      border-radius: 10px;
+      font-size: 14px;
+      color: #1976d2;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 软著采集表查询</h1>
+    
+    <div class="input-group">
+      <label for="queryCode">请输入查询码：</label>
+      <input 
+        type="text" 
+        id="queryCode" 
+        placeholder="例如：RJ20240519001"
+        maxlength="20"
+        style="text-transform: uppercase;"
+      >
+    </div>
+    
+    <button onclick="queryForm()">查询</button>
+    
+    <div class="tip">
+      💡 <strong>说明：</strong><br>
+      查询码是在小程序提交采集表后自动生成的，格式为 "RJ + 日期 + 随机数"。
+      请妥善保管您的查询码，可在本页面查询采集表信息并生成文档。
+    </div>
+    
+    <div id="result" class="result">
+      <!-- 查询结果将在这里显示 -->
+    </div>
+  </div>
+
+  <script>
+    // 回车键触发查询
+    document.getElementById('queryCode').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        queryForm();
+      }
+    });
+
+    // 查询采集表
+    async function queryForm() {
+      const queryCode = document.getElementById('queryCode').value.trim().toUpperCase();
+      const resultDiv = document.getElementById('result');
+      
+      if (!queryCode) {
+        alert('请输入查询码');
+        return;
+      }
+      
+      // 显示加载状态
+      resultDiv.className = 'result show';
+      resultDiv.innerHTML = '<div class="loading">正在查询...</div>';
+      
+      try {
+        // 调用后端接口
+        const response = await fetch(`你的后端域名/api/software-copyright/query/${queryCode}`);
+        const result = await response.json();
+        
+        if (result.code === 200) {
+          // 查询成功，显示数据
+          const data = result.data;
+          resultDiv.innerHTML = `
+            <h2>✅ 查询成功</h2>
+            <div class="result-item">
+              <strong>软件全称</strong>
+              <span>${data.software_full_name}</span>
+            </div>
+            <div class="result-item">
+              <strong>软件简称</strong>
+              <span>${data.software_short_name || '未填写'}</span>
+            </div>
+            <div class="result-item">
+              <strong>版本号</strong>
+              <span>${data.version}</span>
+            </div>
+            <div class="result-item">
+              <strong>软件分类</strong>
+              <span>${data.software_category}</span>
+            </div>
+            <div class="result-item">
+              <strong>开发完成日期</strong>
+              <span>${data.development_date}</span>
+            </div>
+            <div class="result-item">
+              <strong>编程语言</strong>
+              <span>${data.programming_language}</span>
+            </div>
+            <div class="result-item">
+              <strong>源代码行数</strong>
+              <span>${data.source_code_lines} 行</span>
+            </div>
+            <div class="result-item">
+              <strong>主要功能</strong>
+              <span>${data.main_functions}</span>
+            </div>
+            <div class="result-item">
+              <strong>技术特点</strong>
+              <span>${data.technical_features}</span>
+            </div>
+            <div class="result-item">
+              <strong>公司名称</strong>
+              <span>${data.company_name}</span>
+            </div>
+            <div class="result-item">
+              <strong>统一社会信用代码</strong>
+              <span>${data.credit_code}</span>
+            </div>
+            <button onclick="generateDocument('${data.id}')" style="margin-top: 20px;">
+              📄 生成文档
+            </button>
+          `;
+        } else {
+          // 查询失败
+          resultDiv.innerHTML = `
+            <div class="result-item error">
+              <strong>查询失败</strong>
+              <span>${result.msg}</span>
+            </div>
+          `;
+        }
+      } catch (error) {
+        console.error('查询出错:', error);
+        resultDiv.innerHTML = `
+          <div class="result-item error">
+            <strong>网络错误</strong>
+            <span>无法连接到服务器，请稍后重试</span>
+          </div>
+        `;
+      }
+    }
+
+    // 生成文档（跳转到你的扣子编程网页）
+    function generateDocument(formId) {
+      // 跳转到你的扣子编程网页，传递 formId 参数
+      window.location.href = `https://3dkskbjf2r.coze.site?formId=${formId}`;
+    }
+  </script>
+</body>
+</html>
